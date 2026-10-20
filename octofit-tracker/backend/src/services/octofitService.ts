@@ -57,7 +57,7 @@ export async function createTeam(input: unknown) {
     throw Object.assign(new Error('Invalid team input'), { status: 400 });
   }
 
-  const memberIds = members === undefined ? [] : [...new Set(members as string[])];
+  const memberIds = members === undefined ? [] : [...new Set((members as string[]).map((member) => member.toLowerCase()))];
   const existingMembers = await User.countDocuments({ _id: { $in: memberIds } });
   if (existingMembers !== memberIds.length) {
     throw Object.assign(new Error('One or more team members were not found'), { status: 404 });
