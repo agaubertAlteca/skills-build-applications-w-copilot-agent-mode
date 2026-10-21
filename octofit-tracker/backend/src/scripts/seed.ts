@@ -29,6 +29,20 @@ export async function seed() {
       { $set: { name: 'Robocats', mascot: 'Hubot' } },
       { upsert: true, new: true, setDefaultsOnInsert: true },
     );
+    await Team.findOneAndUpdate(
+      { name: 'Manga Maniacs' },
+      {
+        $set: {
+          name: 'Manga Maniacs',
+          mascot: 'Manga Maniacs',
+          description: 'Explore the fantastic stories of the most interesting characters from Japanese Manga (graphic novels).',
+          schedule: 'Tuesdays at 7pm',
+          maxAttendance: 15,
+        },
+        $setOnInsert: { members: [] },
+      },
+      { upsert: true, new: true, setDefaultsOnInsert: true },
+    );
     const mona = await upsertDemoUser('Mona', 'mona@example.com', octocats._id, 'endurance');
     const hubot = await upsertDemoUser('Hubot', 'hubot@example.com', robocats._id, 'strength');
 

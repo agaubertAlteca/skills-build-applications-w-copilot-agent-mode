@@ -101,9 +101,15 @@ describe('OctoFit data contract', () => {
       await mongoose.connect(mongo.getUri());
       const seededMona = await User.findOne({ email: 'mona@example.com' });
       const seededTeam = await Team.findOne({ name: 'Octocats' });
+      const mangaManiacs = await Team.findOne({ name: 'Manga Maniacs' });
       const retainedPreviousTeam = await Team.findById(previousTeam._id);
       expect(seededMona).toBeTruthy();
       expect(seededTeam).toBeTruthy();
+      expect(mangaManiacs).toMatchObject({
+        description: 'Explore the fantastic stories of the most interesting characters from Japanese Manga (graphic novels).',
+        schedule: 'Tuesdays at 7pm',
+        maxAttendance: 15,
+      });
       expect(retainedPreviousTeam).toBeTruthy();
       if (!seededMona || !seededTeam || !seededMona.team || !retainedPreviousTeam) throw new Error('Seed did not create linked Octocats fixtures');
       expect(seededMona.team.toString()).toBe(seededTeam._id.toString());

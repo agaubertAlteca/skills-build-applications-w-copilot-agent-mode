@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getJson } from '../api/client.js';
 
-type Team = { name: string; members?: string[] };
+type Team = { name: string; members?: string[]; description?: string; schedule?: string; maxAttendance?: number };
 
 export default function Teams() {
   const [teams, setTeams] = useState<Team[] | null>(null);
@@ -33,6 +33,9 @@ export default function Teams() {
               <li key={team.name}>
                 <strong>{team.name}</strong>
                 <p>Members: {team.members?.join(', ') || 'No members yet.'}</p>
+                {team.description && <p>{team.description}</p>}
+                {team.schedule && <p>Schedule: {team.schedule}</p>}
+                {team.maxAttendance !== undefined && <p>Max attendance: {team.maxAttendance}</p>}
               </li>
             ))}
           </ul>
