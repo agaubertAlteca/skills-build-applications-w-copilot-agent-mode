@@ -26,7 +26,16 @@ describe('OctoFit presentation contract', () => {
     vi.stubGlobal('fetch', vi.fn(async (input: RequestInfo | URL) => {
       const url = String(input);
       if (url.includes('/api/activities')) return new Response(JSON.stringify({ activities: [{ type: 'run', minutes: 30, points: 30 }] }), { status: 200 });
-      if (url.includes('/api/teams')) return new Response(JSON.stringify({ teams: [{ name: 'Octocats', members: ['Mona'] }] }), { status: 200 });
+      if (url.includes('/api/teams')) return new Response(JSON.stringify({ teams: [
+        { name: 'Octocats', members: ['Mona'] },
+        {
+          name: 'Manga Maniacs',
+          description: 'Explore the fantastic stories of the most interesting characters from Japanese Manga (graphic novels).',
+          schedule: 'Tuesdays at 7pm',
+          maxAttendance: 15,
+          members: [],
+        },
+      ] }), { status: 200 });
       if (url.includes('/api/leaderboard')) return new Response(JSON.stringify({ leaderboard: [{ teamName: 'Octocats', totalPoints: 90, rank: 1 }] }), { status: 200 });
       if (/\/api\/workouts\/suggestions\/mona(%40|@)example\.com$/.test(url)) return new Response(JSON.stringify({ suggestions: [{ title: 'Intervals', reason: 'Build endurance' }] }), { status: 200 });
       return new Response(JSON.stringify({ message: 'Not found' }), { status: 404 });
@@ -42,6 +51,9 @@ describe('OctoFit presentation contract', () => {
   it('renders teams, leaderboard, and workout suggestions with accessible content', async () => {
     const teams = renderRoute('/teams');
     await waitFor(() => expect(screen.getByText(/Octocats/)).toBeInTheDocument());
+    expect(screen.getByText('Explore the fantastic stories of the most interesting characters from Japanese Manga (graphic novels).')).toBeInTheDocument();
+    expect(screen.getByText('Schedule: Tuesdays at 7pm')).toBeInTheDocument();
+    expect(screen.getByText('Max attendance: 15')).toBeInTheDocument();
     teams.unmount();
     const leaderboard = renderRoute('/leaderboard');
     await waitFor(() => expect(screen.getByText(/90/)).toBeInTheDocument());
